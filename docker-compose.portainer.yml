@@ -1,7 +1,11 @@
 # Stack para Portainer — FG Cursos
 # Imagens vêm do Docker Hub (publicadas pelo GitHub Actions).
-# O nginx-proxy-manager do host faz o roteamento de domínio e SSL.
-# Aponte no NPM: portal.fgcentroeducacional.com.br → http://localhost:8086
+# O nginx-proxy-manager roteia portal.fgcentroeducacional.com.br → fgcursos_web:8000
+# via o network externo compartilhado "proxy".
+#
+# Pré-requisito (rodar uma vez no servidor):
+#   docker network create proxy
+# E adicionar esse network ao container do nginx-proxy-manager via Portainer.
 
 services:
   db:
@@ -37,8 +41,7 @@ services:
     image: ${DOCKERHUB_USERNAME}/fgcursos:latest
     container_name: fgcursos_web
     restart: unless-stopped
-    ports:
-      - "8086:8000"   # nginx-proxy-manager aponta para esta porta
+    # Sem ports: — o NPM acessa via network "proxy" usando o nome do container
     env_file: stack.env
     depends_on:
       db:
@@ -47,6 +50,9 @@ services:
         condition: service_healthy
     volumes:
       - fgcursos_media:/app/media
+    networks:
+      - default
+      - proxy
 
   celery:
     image: ${DOCKERHUB_USERNAME}/fgcursos:latest
@@ -74,3 +80,9 @@ volumes:
   fgcursos_postgres:
   fgcursos_redis:
   fgcursos_media:
+
+networks:
+  proxy:
+    external: true   # criado uma vez: docker network create proxy
+  default:
+    driver: bridge
