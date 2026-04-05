@@ -65,7 +65,7 @@ jobs:
             echo "Configure o secret no GitHub para ativar o redeploy automático."
             exit 0
           fi
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+          HTTP_CODE=$(curl -sk -o /dev/null -w "%{http_code}" \
             -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}")
           echo "Portainer webhook respondeu: $HTTP_CODE"
           if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "204" ]; then
