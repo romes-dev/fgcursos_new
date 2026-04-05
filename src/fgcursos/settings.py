@@ -125,15 +125,19 @@ STORAGES = {
     },
 }
 
-# AWS / S3 / R2 / MinIO
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='fgcursos-media')
-AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL', default='')
-AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN', default='')
-AWS_DEFAULT_ACL = 'private'
+# Cloudflare R2 (usa as mesmas variáveis R2_* do jacareshop)
+_r2_account_id = config('R2_ACCOUNT_ID', default='')
+AWS_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = config('R2_SECRET_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME', default='jacareshop')
+AWS_S3_ENDPOINT_URL = f'https://{_r2_account_id}.r2.cloudflarestorage.com' if _r2_account_id else ''
+# Remove o https:// da URL pública — django-storages espera só o domínio
+_r2_public_url = config('R2_PUBLIC_URL', default='')
+AWS_S3_CUSTOM_DOMAIN = _r2_public_url.replace('https://', '').replace('http://', '') if _r2_public_url else ''
+AWS_DEFAULT_ACL = None          # R2 não suporta ACLs
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_S3_SIGNATURE_VERSION = 's3v4'  # Obrigatório no R2
 
 # Cache com Redis
 CACHES = {
@@ -187,9 +191,12 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
+    # NÃO usar SECURE_SSL_REDIRECT=True atrás do Cloudflare ou nginx-proxy-manager
+    # — eles encerram o TLS e repassam HTTP internamente, causando redirect loop.
+    # O Django detecta HTTPS pelo header X-Forwarded-Proto enviado pelo proxy.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # HSTS é gerenciado pelo Cloudflare — não duplicar aqui para evitar conflito.
+    SECURE_HSTS_SECONDS = 0
