@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Entrar — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full">
+    <div class="text-center mb-8">
+      <a href="{% url 'core:home' %}" class="inline-flex items-center gap-2 font-bold text-2xl text-primary-700 mb-4">
+        <span class="bg-primary-700 text-white rounded-lg px-2 py-1 text-sm font-black">FG</span>
+        Cursos
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900">Acessar minha conta</h1>
+      <p class="text-gray-500 mt-1 text-sm">Não tem conta? <a href="{% url 'accounts:register' %}" class="text-primary-600 hover:underline font-medium">Cadastrar</a></p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+      {% if form.non_field_errors %}
+      <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-4">
+        {{ form.non_field_errors.0 }}
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.username.label }}</label>
+            {{ form.username }}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.password.label }}</label>
+            {{ form.password }}
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end mt-3">
+          <a href="{% url 'password_reset' %}" class="text-xs text-primary-600 hover:underline">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit"
+                class="w-full mt-5 bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors">
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

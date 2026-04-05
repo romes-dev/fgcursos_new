@@ -1,0 +1,44 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Pedido #{{ order.number }} — FG Cursos{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Pedido #{{ order.number }}</h1>
+
+<div class="bg-white border border-gray-200 rounded-xl p-6">
+  <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+    <div>
+      <p class="text-sm text-gray-500">Data: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+      <p class="text-sm text-gray-500">Cliente: {{ order.customer_name }}</p>
+    </div>
+    <span class="px-3 py-1 rounded-full text-sm font-semibold
+      {% if order.status == 'paid' %}bg-green-100 text-green-700
+      {% elif order.status == 'pending' %}bg-yellow-100 text-yellow-700
+      {% else %}bg-red-100 text-red-700{% endif %}">
+      {{ order.get_status_display }}
+    </span>
+  </div>
+
+  <table class="w-full text-sm mb-4">
+    <thead>
+      <tr class="border-b border-gray-100 text-gray-500">
+        <th class="text-left py-2">Curso</th>
+        <th class="text-right py-2">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.items.all %}
+      <tr class="border-b border-gray-50">
+        <td class="py-3 text-gray-800">{{ item.course_title }}</td>
+        <td class="py-3 text-right font-semibold text-gray-900">R$ {{ item.total_price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="pt-4 font-bold text-gray-900">Total</td>
+        <td class="pt-4 text-right font-bold text-primary-700 text-lg">R$ {{ order.total }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+{% endblock %}

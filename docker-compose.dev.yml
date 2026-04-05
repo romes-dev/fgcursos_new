@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: fgcursos_db_dev
+    environment:
+      POSTGRES_DB: fgcursos_dev
+      POSTGRES_USER: fgcursos_user
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: fgcursos_redis_dev
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    container_name: fgcursos_web_dev
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: django-insecure-dev-key
+      DB_NAME: fgcursos_dev
+      DB_USER: fgcursos_user
+      DB_PASSWORD: devpassword
+      DB_HOST: db
+      DB_PORT: "5432"
+      REDIS_URL: "redis://redis:6379/0"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    build: .
+    container_name: fgcursos_celery_dev
+    command: celery -A fgcursos worker -l debug
+    volumes:
+      - ./src:/app
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: django-insecure-dev-key
+      DB_NAME: fgcursos_dev
+      DB_USER: fgcursos_user
+      DB_PASSWORD: devpassword
+      DB_HOST: db
+      DB_PORT: "5432"
+      REDIS_URL: "redis://redis:6379/0"
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_dev_data:

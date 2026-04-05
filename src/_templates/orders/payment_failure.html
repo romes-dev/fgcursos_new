@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Pagamento não aprovado — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-20 text-center">
+  <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+    <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </div>
+  <h1 class="text-3xl font-bold text-gray-900 mb-3">Pagamento não aprovado</h1>
+  <p class="text-gray-500 mb-8">
+    Infelizmente seu pagamento não foi aprovado. Você pode tentar novamente ou entrar em contato conosco pelo WhatsApp.
+  </p>
+  <div class="flex flex-wrap justify-center gap-3">
+    <a href="{% url 'courses:catalog' %}"
+       class="bg-primary-700 hover:bg-primary-800 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+      Tentar novamente
+    </a>
+    <a href="https://wa.me/{{ SITE_WHATSAPP }}" target="_blank"
+       class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
+      Falar no WhatsApp
+    </a>
+  </div>
+</div>
+{% endblock %}

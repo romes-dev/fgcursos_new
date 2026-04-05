@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Sobre — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <h1 class="text-4xl font-bold text-gray-900 mb-4">Sobre a FG Centro Educacional</h1>
+  <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+    A FG Centro Educacional Assessoria e Consultoria é especializada em EJA (Educação de Jovens, Adultos e Idosos)
+    e cursos técnicos na modalidade EAD, com sede em Brasília-DF. Nossa missão é oferecer trilhas flexíveis,
+    apoio pedagógico próximo e certificação oficial para acelerar sua trajetória acadêmica e profissional.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <div class="bg-primary-50 rounded-2xl p-6">
+      <h2 class="font-bold text-xl text-primary-800 mb-3">Nossa Missão</h2>
+      <p class="text-gray-600 text-sm leading-relaxed">
+        Democratizar o acesso à educação de qualidade, oferecendo cursos reconhecidos pelo MEC e pela
+        Secretaria de Educação do DF, com flexibilidade para quem trabalha ou tem outros compromissos.
+      </p>
+    </div>
+    <div class="bg-green-50 rounded-2xl p-6">
+      <h2 class="font-bold text-xl text-green-800 mb-3">Nosso Diferencial</h2>
+      <p class="text-gray-600 text-sm leading-relaxed">
+        100% EAD com 20% de presencialidade. Tutores disponíveis de seg a sáb, com resposta em até 48h.
+        Avaliações agendadas e plantões de dúvidas personalizados.
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 rounded-2xl p-8">
+    <h2 class="font-bold text-xl text-gray-900 mb-4">Informações de Contato</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+      <p><strong>Telefone:</strong> {{ SITE_PHONE }}</p>
+      <p><strong>E-mail:</strong> {{ SITE_EMAIL }}</p>
+      <p><strong>Endereço:</strong> {{ SITE_ADDRESS }}</p>
+      <p>
+        <strong>WhatsApp:</strong>
+        <a href="https://wa.me/{{ SITE_WHATSAPP }}" target="_blank" class="text-green-600 hover:underline">
+          Conversar agora
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:fgcentroeducacional.com.br)",
+      "Read(//c/Users/User/Repositórios//**)",
+      "Bash(mkdir -p /c/Users/User/Repositórios/fgcursos_new/.github/workflows /c/Users/User/Repositórios/fgcursos_new/nginx /c/Users/User/Repositórios/fgcursos_new/src/fgcursos /c/Users/User/Repositórios/fgcursos_new/src/apps/core/templatetags /c/Users/User/Repositórios/fgcursos_new/src/apps/accounts /c/Users/User/Repositórios/fgcursos_new/src/apps/courses /c/Users/User/Repositórios/fgcursos_new/src/apps/cart /c/Users/User/Repositórios/fgcursos_new/src/apps/orders /c/Users/User/Repositórios/fgcursos_new/src/apps/payments/gateways /c/Users/User/Repositórios/fgcursos_new/src/apps/dashboard /c/Users/User/Repositórios/fgcursos_new/src/_templates/partials /c/Users/User/Repositórios/fgcursos_new/src/_templates/core /c/Users/User/Repositórios/fgcursos_new/src/_templates/courses /c/Users/User/Repositórios/fgcursos_new/src/_templates/cart /c/Users/User/Repositórios/fgcursos_new/src/_templates/orders /c/Users/User/Repositórios/fgcursos_new/src/_templates/dashboard /c/Users/User/Repositórios/fgcursos_new/src/_templates/accounts /c/Users/User/Repositórios/fgcursos_new/src/_templates/registration /c/Users/User/Repositórios/fgcursos_new/src/assets/css /c/Users/User/Repositórios/fgcursos_new/src/assets/js /c/Users/User/Repositórios/fgcursos_new/src/assets/img /c/Users/User/Repositórios/fgcursos_new/src/locale/pt_BR)",
+      "Bash(touch /c/Users/User/Repositórios/fgcursos_new/src/apps/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/core/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/core/templatetags/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/accounts/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/courses/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/cart/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/orders/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/payments/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/payments/gateways/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/apps/dashboard/__init__.py /c/Users/User/Repositórios/fgcursos_new/src/fgcursos/__init__.py)",
+      "Read(//c/Users/User/.claude/projects/c--Users-User-Reposit-rios-fgcursos-new/memory/**)"
+    ]
+  }
+}

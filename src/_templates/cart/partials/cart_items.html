@@ -1,0 +1,24 @@
+<div id="cart-items">
+{% for item in cart %}
+<div class="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 mb-4">
+  <div class="flex-1 min-w-0">
+    <a href="{{ item.course.get_absolute_url }}" class="font-semibold text-gray-900 hover:text-primary-700 line-clamp-1">
+      {{ item.course.title }}
+    </a>
+    <p class="text-sm text-gray-500">{{ item.course.get_level_display }} · {{ item.course.workload_hours }}h</p>
+  </div>
+  <div class="text-right shrink-0">
+    <p class="font-bold text-primary-700">R$ {{ item.price }}</p>
+    <form method="post" action="{% url 'cart:remove' item.course_id %}"
+          hx-post="{% url 'cart:remove' item.course_id %}"
+          hx-target="#cart-items"
+          hx-swap="outerHTML">
+      {% csrf_token %}
+      <button type="submit" class="text-xs text-red-500 hover:text-red-700 mt-1">Remover</button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<p class="text-center text-gray-400 py-8">Carrinho vazio.</p>
+{% endfor %}
+</div>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}FG Centro Educacional — Cursos EJA e Técnicos EAD em Brasília-DF. Certificação reconhecida pela Secretaria de Educação-DF.{% endblock %}">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50:  '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            fg: {
+              blue:   '#1a56db',
+              dark:   '#111827',
+              light:  '#f8fafc',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+
+  <!-- Custom CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/fgcursos.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-white text-gray-900 antialiased flex flex-col min-h-screen">
+
+  {% include 'partials/_navbar.html' %}
+
+  {% include 'partials/_messages.html' %}
+
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'partials/_footer.html' %}
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

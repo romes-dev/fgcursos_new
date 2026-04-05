@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Finalizar Compra — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Finalizar Compra</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Formulário -->
+    <div class="lg:col-span-2">
+      <div class="bg-white border border-gray-200 rounded-xl p-6">
+        <h2 class="font-bold text-gray-900 mb-5">Seus dados</h2>
+        <form method="post" novalidate id="checkout-form">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for field in form %}
+            <div {% if field.name == 'email' %}class="md:col-span-2"{% endif %}>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                {{ field.label }}
+                {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+              </label>
+              {{ field }}
+              {% if field.errors %}
+              <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          <button type="submit"
+                  class="w-full mt-6 bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors">
+            Ir para o pagamento
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="bg-white border border-gray-200 rounded-xl p-5 h-fit">
+      <h2 class="font-bold text-gray-900 mb-4">Resumo do pedido</h2>
+      <div class="space-y-3">
+        {% for item in cart %}
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600 truncate mr-2">{{ item.course.title }}</span>
+          <span class="font-semibold text-gray-900 shrink-0">R$ {{ item.price }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="border-t border-gray-100 pt-3 mt-3 flex justify-between font-bold text-gray-900">
+        <span>Total</span>
+        <span class="text-primary-700 text-lg">R$ {{ cart.total }}</span>
+      </div>
+      <p class="text-xs text-gray-400 mt-3 text-center">
+        Pagamento processado com segurança pelo Mercado Pago
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

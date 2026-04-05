@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — FG Cursos{% endblock %}
+{% block meta_description %}{{ course.meta_description|default:course.short_description }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <!-- Conteúdo principal -->
+    <div class="lg:col-span-2">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-gray-400 mb-4">
+        <a href="{% url 'core:home' %}" class="hover:text-primary-600">Início</a>
+        <span class="mx-2">/</span>
+        <a href="{% url 'courses:catalog' %}" class="hover:text-primary-600">Cursos</a>
+        <span class="mx-2">/</span>
+        <span class="text-gray-700">{{ course.title }}</span>
+      </nav>
+
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="text-xs font-semibold bg-primary-50 text-primary-700 px-2 py-1 rounded-full">{{ course.get_level_display }}</span>
+        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">{{ course.get_modality_display }}</span>
+        {% if course.has_discount %}
+        <span class="text-xs bg-red-50 text-red-600 font-semibold px-2 py-1 rounded-full">-{{ course.discount_percent }}% OFF</span>
+        {% endif %}
+      </div>
+
+      <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{{ course.title }}</h1>
+      <p class="text-gray-600 text-lg mb-6 leading-relaxed">{{ course.short_description|default:course.description|truncatewords:40 }}</p>
+
+      <!-- Vídeo promocional -->
+      {% if course.promo_video_url %}
+      <div class="aspect-video rounded-2xl overflow-hidden mb-8 bg-black">
+        <iframe src="{{ course.promo_video_url }}" class="w-full h-full" allowfullscreen></iframe>
+      </div>
+      {% elif course.cover_image %}
+      <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="w-full rounded-2xl mb-8 object-cover max-h-72">
+      {% endif %}
+
+      <!-- Descrição completa -->
+      <div class="prose max-w-none text-gray-700 mb-10">
+        {{ course.description|linebreaks }}
+      </div>
+
+      <!-- Módulos -->
+      {% if modules %}
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Conteúdo do Curso</h2>
+        <div class="space-y-3">
+          {% for module in modules %}
+          <details class="border border-gray-200 rounded-xl overflow-hidden group">
+            <summary class="flex items-center justify-between p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors font-semibold text-gray-800">
+              <span>{{ module.title }}</span>
+              <span class="text-sm text-gray-400 font-normal">{{ module.lessons.count }} aulas</span>
+            </summary>
+            <ul class="divide-y divide-gray-100">
+              {% for lesson in module.lessons.all %}
+              {% if lesson.is_active %}
+              <li class="flex items-center gap-3 px-4 py-3 text-sm">
+                <span class="w-5 h-5 shrink-0">
+                  {% if lesson.lesson_type == 'video' %}
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-primary-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  {% elif lesson.lesson_type == 'pdf' %}
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-red-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                  </svg>
+                  {% else %}
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-gray-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  {% endif %}
+                </span>
+                <span class="text-gray-700 flex-1">{{ lesson.title }}</span>
+                {% if lesson.duration_minutes %}
+                <span class="text-gray-400 text-xs">{{ lesson.duration_minutes }}min</span>
+                {% endif %}
+                {% if lesson.is_free_preview %}
+                <span class="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-semibold">Grátis</span>
+                {% else %}
+                <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+                {% endif %}
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </details>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar de compra -->
+    <div class="lg:col-span-1">
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm sticky top-24">
+        <!-- Preço -->
+        <div class="mb-6">
+          {% if course.has_discount %}
+          <p class="text-sm text-gray-400 line-through">R$ {{ course.compare_price }}</p>
+          {% endif %}
+          <p class="text-4xl font-bold text-primary-700">R$ {{ course.price }}</p>
+          <p class="text-sm text-gray-500 mt-1">ou 12x no cartão</p>
+        </div>
+
+        <!-- Infos rápidas -->
+        <ul class="space-y-2 text-sm text-gray-600 mb-6 border-y border-gray-100 py-4">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ course.workload_hours }}h de carga horária
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            {{ course.duration_months }} meses de acesso
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Certificado oficial
+          </li>
+          {% if course.has_internship %}
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            {{ course.internship_hours }}h de estágio
+          </li>
+          {% endif %}
+        </ul>
+
+        <!-- Botões de ação -->
+        {% if is_enrolled %}
+        <a href="{% url 'dashboard:my_course' slug=course.slug %}"
+           class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors mb-3">
+          Acessar Curso
+        </a>
+        <p class="text-center text-xs text-green-600 font-semibold">✓ Você já está matriculado</p>
+        {% elif in_cart %}
+        <a href="{% url 'cart:detail' %}"
+           class="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors mb-3">
+          Ver Carrinho
+        </a>
+        <p class="text-center text-xs text-primary-600 font-semibold">✓ Adicionado ao carrinho</p>
+        {% else %}
+        <form method="post" action="{% url 'cart:add' course.id %}"
+              hx-post="{% url 'cart:add' course.id %}"
+              hx-target="#cart-widget"
+              hx-swap="outerHTML">
+          {% csrf_token %}
+          <button type="submit"
+                  class="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors mb-3">
+            Matricular-se Agora
+          </button>
+        </form>
+        <a href="https://wa.me/{{ SITE_WHATSAPP }}?text=Olá!%20Tenho%20interesse%20no%20curso%20{{ course.title|urlencode }}"
+           target="_blank"
+           class="block w-full text-center border border-green-500 text-green-600 hover:bg-green-50 font-semibold py-2 rounded-xl transition-colors text-sm">
+          Dúvidas? WhatsApp
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

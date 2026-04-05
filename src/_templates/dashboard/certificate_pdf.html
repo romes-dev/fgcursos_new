@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #1e3a8a;
+    }
+    .certificate {
+      width: 297mm;
+      height: 210mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20mm;
+      box-sizing: border-box;
+      border: 12px solid #1d4ed8;
+      position: relative;
+    }
+    .border-inner {
+      position: absolute;
+      inset: 18px;
+      border: 3px solid #93c5fd;
+      pointer-events: none;
+    }
+    .logo {
+      font-size: 28pt;
+      font-weight: bold;
+      color: #1d4ed8;
+      letter-spacing: 2px;
+      margin-bottom: 8mm;
+    }
+    .institution {
+      font-size: 11pt;
+      color: #64748b;
+      margin-bottom: 10mm;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .title {
+      font-size: 22pt;
+      font-weight: normal;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #1e3a8a;
+      margin-bottom: 8mm;
+    }
+    .certifies {
+      font-size: 11pt;
+      color: #64748b;
+      margin-bottom: 6mm;
+    }
+    .student-name {
+      font-size: 28pt;
+      font-weight: bold;
+      color: #1e40af;
+      border-bottom: 2px solid #93c5fd;
+      padding-bottom: 3mm;
+      margin-bottom: 6mm;
+      min-width: 150mm;
+      text-align: center;
+    }
+    .course-text {
+      font-size: 10pt;
+      color: #64748b;
+      margin-bottom: 2mm;
+    }
+    .course-name {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-bottom: 8mm;
+    }
+    .details {
+      font-size: 9pt;
+      color: #94a3b8;
+      margin-bottom: 12mm;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 8mm;
+    }
+    .signature {
+      text-align: center;
+      min-width: 70mm;
+    }
+    .signature-line {
+      border-top: 1px solid #94a3b8;
+      padding-top: 2mm;
+      font-size: 9pt;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+<div class="certificate">
+  <div class="border-inner"></div>
+  <div class="logo">FG CURSOS</div>
+  <div class="institution">FG Centro Educacional Assessoria e Consultoria</div>
+  <div class="title">Certificado de Conclusão</div>
+  <div class="certifies">Certificamos que</div>
+  <div class="student-name">{{ student.get_full_name }}</div>
+  <div class="course-text">concluiu com êxito o curso</div>
+  <div class="course-name">{{ course.title }}</div>
+  <div class="details">
+    Carga horária: {{ course.total_workload }}h &nbsp;|&nbsp;
+    Modalidade: {{ course.get_modality_display }} &nbsp;|&nbsp;
+    Emitido em: {{ issued_at|date:"d/m/Y" }}
+  </div>
+  <div class="footer">
+    <div class="signature">
+      <div class="signature-line">Direção Pedagógica<br>FG Centro Educacional</div>
+    </div>
+    <div style="text-align:center;font-size:8pt;color:#94a3b8;align-self:center">
+      Certificado reconhecido pela<br>Secretaria de Educação do DF
+    </div>
+    <div class="signature">
+      <div class="signature-line">{{ student.get_full_name }}<br>Aluno(a)</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

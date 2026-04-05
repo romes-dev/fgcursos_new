@@ -1,0 +1,76 @@
+# Stack para Portainer — FG Cursos
+# Imagens vêm do Docker Hub (publicadas pelo GitHub Actions).
+# O nginx-proxy-manager do host faz o roteamento de domínio e SSL.
+# Aponte no NPM: portal.fgcentroeducacional.com.br → http://localhost:8086
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: fgcursos_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - fgcursos_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fgcursos_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - fgcursos_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: ${DOCKERHUB_USERNAME}/fgcursos:latest
+    container_name: fgcursos_web
+    restart: unless-stopped
+    ports:
+      - "8086:8000"   # nginx-proxy-manager aponta para esta porta
+    env_file: stack.env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - fgcursos_media:/app/media
+
+  celery:
+    image: ${DOCKERHUB_USERNAME}/fgcursos:latest
+    container_name: fgcursos_celery
+    restart: unless-stopped
+    command: celery -A fgcursos worker -l info -c 2
+    env_file: stack.env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery-beat:
+    image: ${DOCKERHUB_USERNAME}/fgcursos:latest
+    container_name: fgcursos_beat
+    restart: unless-stopped
+    command: celery -A fgcursos beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file: stack.env
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  fgcursos_postgres:
+  fgcursos_redis:
+  fgcursos_media:

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Carrinho — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Meu Carrinho</h1>
+
+  {% if cart|length %}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Itens -->
+    <div class="lg:col-span-2 space-y-4" id="cart-items">
+      {% for item in cart %}
+      <div class="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
+        {% if item.course.cover_image %}
+        <img src="{{ item.course.cover_image.url }}" alt="{{ item.course.title }}" class="w-20 h-16 rounded-lg object-cover shrink-0">
+        {% else %}
+        <div class="w-20 h-16 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
+          <span class="text-primary-700 font-bold text-xs text-center px-1">{{ item.course.title|truncatechars:20 }}</span>
+        </div>
+        {% endif %}
+        <div class="flex-1 min-w-0">
+          <a href="{{ item.course.get_absolute_url }}" class="font-semibold text-gray-900 hover:text-primary-700 line-clamp-1">
+            {{ item.course.title }}
+          </a>
+          <p class="text-sm text-gray-500">{{ item.course.get_level_display }} · {{ item.course.workload_hours }}h</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="font-bold text-primary-700">R$ {{ item.price }}</p>
+          <form method="post" action="{% url 'cart:remove' item.course_id %}"
+                hx-post="{% url 'cart:remove' item.course_id %}"
+                hx-target="#cart-items"
+                hx-swap="outerHTML">
+            {% csrf_token %}
+            <button type="submit" class="text-xs text-red-500 hover:text-red-700 mt-1">Remover</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Resumo -->
+    <div class="bg-white border border-gray-200 rounded-xl p-5 h-fit">
+      <h2 class="font-bold text-gray-900 mb-4">Resumo</h2>
+      <div class="flex justify-between text-sm text-gray-600 mb-2">
+        <span>Subtotal</span>
+        <span>R$ {{ cart.total }}</span>
+      </div>
+      <div class="border-t border-gray-100 pt-3 mt-3 flex justify-between font-bold text-gray-900">
+        <span>Total</span>
+        <span class="text-primary-700 text-lg">R$ {{ cart.total }}</span>
+      </div>
+
+      {% if user.is_authenticated %}
+      <a href="{% url 'orders:checkout' %}"
+         class="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors mt-5">
+        Finalizar Compra
+      </a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}?next={% url 'orders:checkout' %}"
+         class="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors mt-5">
+        Entrar para Finalizar
+      </a>
+      <a href="{% url 'accounts:register' %}"
+         class="block w-full text-center border border-primary-700 text-primary-700 hover:bg-primary-50 font-semibold py-2.5 rounded-xl transition-colors mt-2 text-sm">
+        Criar conta
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% else %}
+  <div class="text-center py-16">
+    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-4H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+      </svg>
+    </div>
+    <p class="text-gray-500 mb-4">Seu carrinho está vazio.</p>
+    <a href="{% url 'courses:catalog' %}" class="bg-primary-700 hover:bg-primary-800 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+      Ver cursos
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

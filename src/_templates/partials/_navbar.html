@@ -1,0 +1,92 @@
+{% load static %}
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a href="{% url 'core:home' %}" class="flex items-center gap-2 font-bold text-xl text-primary-700">
+        <span class="bg-primary-700 text-white rounded-lg px-2 py-1 text-sm font-black tracking-wide">FG</span>
+        <span>Cursos</span>
+      </a>
+
+      <!-- Nav Links -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+        <a href="{% url 'core:home' %}" class="hover:text-primary-700 transition-colors">Início</a>
+        <a href="{% url 'courses:catalog' %}" class="hover:text-primary-700 transition-colors">Cursos</a>
+        <a href="{% url 'core:about' %}" class="hover:text-primary-700 transition-colors">Sobre</a>
+        <a href="https://wa.me/{{ SITE_WHATSAPP }}" target="_blank" class="hover:text-green-600 transition-colors">
+          WhatsApp
+        </a>
+      </nav>
+
+      <!-- Right side actions -->
+      <div class="flex items-center gap-3">
+        <!-- Cart -->
+        <a href="{% url 'cart:detail' %}"
+           class="relative flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 transition-colors"
+           id="cart-widget"
+           hx-get="{% url 'cart:detail' %}"
+           hx-trigger="cartUpdated from:body"
+           hx-target="#cart-widget"
+           hx-swap="outerHTML">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-4H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          {% if cart_count %}
+          <span class="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+            {{ cart_count }}
+          </span>
+          {% endif %}
+        </a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard:home' %}"
+             class="text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors hidden md:block">
+            Minha Área
+          </a>
+          <a href="{% url 'accounts:logout' %}"
+             class="text-sm font-medium text-red-500 hover:text-red-700 transition-colors hidden md:block">
+            Sair
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}"
+             class="hidden md:block text-sm font-medium text-gray-600 hover:text-primary-700 transition-colors">
+            Entrar
+          </a>
+          <a href="{% url 'accounts:register' %}"
+             class="bg-primary-700 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors">
+            Cadastrar
+          </a>
+        {% endif %}
+
+        <!-- Mobile menu button -->
+        <button class="md:hidden p-2 rounded-lg hover:bg-gray-100" id="mobile-menu-btn">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="md:hidden hidden border-t border-gray-100 py-3 space-y-1" id="mobile-menu">
+      <a href="{% url 'core:home' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Início</a>
+      <a href="{% url 'courses:catalog' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Cursos</a>
+      <a href="{% url 'core:about' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Sobre</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:home' %}" class="block px-3 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 rounded-lg">Minha Área</a>
+        <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg">Sair</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">Entrar</a>
+        <a href="{% url 'accounts:register' %}" class="block px-3 py-2 text-sm font-medium text-primary-700 hover:bg-primary-50 rounded-lg">Cadastrar</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<script>
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+  });
+</script>

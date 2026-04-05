@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Catálogo de Cursos — FG Cursos{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Catálogo de Cursos</h1>
+    <p class="text-gray-500 mt-1">Encontre o curso ideal para você</p>
+  </div>
+
+  <!-- Filtros -->
+  <form method="get" class="bg-white border border-gray-200 rounded-xl p-4 mb-8 flex flex-wrap gap-4 items-end">
+    <div>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Categoria</label>
+      <select name="categoria" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+        <option value="">Todas</option>
+        {% for cat in categories %}
+        <option value="{{ cat.slug }}" {% if active_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Nível</label>
+      <select name="nivel" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+        <option value="">Todos</option>
+        {% for val, label in level_choices %}
+        <option value="{{ val }}" {% if active_level == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Modalidade</label>
+      <select name="modalidade" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+        <option value="">Todas</option>
+        {% for val, label in modality_choices %}
+        <option value="{{ val }}" {% if active_modality == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="bg-primary-700 text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-primary-800 transition-colors">
+      Filtrar
+    </button>
+    {% if active_category or active_level or active_modality %}
+    <a href="{% url 'courses:catalog' %}" class="text-sm text-gray-500 hover:text-gray-700 underline self-center">Limpar filtros</a>
+    {% endif %}
+  </form>
+
+  <!-- Grid de cursos -->
+  {% if courses %}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for course in courses %}
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+      {% if course.cover_image %}
+      <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="w-full h-44 object-cover">
+      {% else %}
+      <div class="w-full h-44 bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
+        <span class="text-white font-bold text-base text-center px-4">{{ course.title }}</span>
+      </div>
+      {% endif %}
+
+      <div class="p-5 flex flex-col flex-1">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="text-xs font-semibold bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">{{ course.get_level_display }}</span>
+          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{{ course.get_modality_display }}</span>
+          <span class="text-xs text-gray-400 ml-auto">{{ course.workload_hours }}h</span>
+        </div>
+        <h3 class="font-bold text-gray-900 text-base mb-2">{{ course.title }}</h3>
+        <p class="text-sm text-gray-500 mb-4 flex-1">{{ course.short_description|default:course.description|truncatewords:18 }}</p>
+
+        <div class="flex items-center justify-between mt-auto border-t border-gray-100 pt-4">
+          <div>
+            {% if course.has_discount %}
+            <p class="text-xs text-gray-400 line-through">R$ {{ course.compare_price }}</p>
+            {% endif %}
+            <p class="text-xl font-bold text-primary-700">R$ {{ course.price }}</p>
+            <p class="text-xs text-gray-400">ou 12x no cartão</p>
+          </div>
+          <a href="{{ course.get_absolute_url }}"
+             class="bg-primary-700 hover:bg-primary-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+            Ver curso
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-16">
+    <p class="text-gray-400 text-lg">Nenhum curso encontrado com esses filtros.</p>
+    <a href="{% url 'courses:catalog' %}" class="text-primary-600 underline text-sm mt-2 inline-block">Ver todos os cursos</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

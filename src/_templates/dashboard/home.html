@@ -1,0 +1,66 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Minha Área — FG Cursos{% endblock %}
+
+{% block dashboard_content %}
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Meus Cursos</h1>
+
+{% if enrollments %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+  {% for enrollment in enrollments %}
+  <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
+    {% if enrollment.course.cover_image %}
+    <div class="relative">
+      <img src="{{ enrollment.course.cover_image.url }}" alt="{{ enrollment.course.title }}" class="w-full h-36 object-cover">
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+        <div class="h-1 bg-primary-600 transition-all" style="width: {{ enrollment.completion_percent }}%"></div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="p-5">
+      <h3 class="font-bold text-gray-900 mb-1">{{ enrollment.course.title }}</h3>
+      <p class="text-sm text-gray-500 mb-3">Matriculado em {{ enrollment.enrolled_at|date:"d/m/Y" }}</p>
+
+      <!-- Progresso -->
+      <div class="mb-4">
+        <div class="flex justify-between text-xs text-gray-500 mb-1">
+          <span>Progresso</span>
+          <span class="font-semibold text-primary-700">{{ enrollment.completion_percent }}%</span>
+        </div>
+        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-2 bg-primary-600 rounded-full transition-all" style="width: {{ enrollment.completion_percent }}%"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="{% url 'dashboard:my_course' enrollment.course.slug %}"
+           class="flex-1 text-center bg-primary-700 hover:bg-primary-800 text-white text-sm font-semibold py-2 rounded-xl transition-colors">
+          {% if enrollment.completion_percent == 0 %}Começar{% elif enrollment.completion_percent == 100 %}Revisar{% else %}Continuar{% endif %}
+        </a>
+        {% if enrollment.certificate_file %}
+        <a href="{% url 'dashboard:certificate' enrollment.pk %}"
+           class="flex items-center gap-1 border border-primary-300 text-primary-700 hover:bg-primary-50 text-sm font-medium px-3 py-2 rounded-xl transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+          Certificado
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-16 bg-white rounded-2xl border border-gray-200">
+  <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+    <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+    </svg>
+  </div>
+  <p class="text-gray-500 mb-4">Você ainda não tem matrículas ativas.</p>
+  <a href="{% url 'courses:catalog' %}" class="bg-primary-700 hover:bg-primary-800 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+    Explorar cursos
+  </a>
+</div>
+{% endif %}
+{% endblock %}
