@@ -60,6 +60,11 @@ jobs:
     steps:
       - name: Trigger Portainer webhook
         run: |
+          if [ -z "${{ secrets.PORTAINER_WEBHOOK_URL }}" ]; then
+            echo "⚠️  PORTAINER_WEBHOOK_URL não configurado — skipping deploy automático."
+            echo "Configure o secret no GitHub para ativar o redeploy automático."
+            exit 0
+          fi
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
             -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}")
           echo "Portainer webhook respondeu: $HTTP_CODE"
@@ -67,4 +72,4 @@ jobs:
             echo "Falha ao acionar o Portainer (HTTP $HTTP_CODE)"
             exit 1
           fi
-          echo "Stack redeploy acionado com sucesso."
+          echo "✅ Stack redeploy acionado com sucesso."
