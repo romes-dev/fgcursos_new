@@ -44,3 +44,9 @@ Thumbs.db
 .coverage
 htmlcov/
 .pytest_cache/
+
+#ClaudeMaldito e IAs
+.claude
+.copilot
+.codex
+
