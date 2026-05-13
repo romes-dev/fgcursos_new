@@ -13,3 +13,4 @@ mercadopago>=2.3.0
 django-cleanup>=8.1.0
 weasyprint>=61.0
 django-htmx>=1.19.0
+django-all-in-one-accessibility>=3.0.3

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'apps.orders.apps.OrdersConfig',
     'apps.payments.apps.PaymentsConfig',
     'apps.dashboard.apps.DashboardConfig',
+    'accessibility', # django-all-in-one-accessibility
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'apps.core.context_processors.site_settings',
                 'apps.cart.context_processors.cart_count',
+                'accessibility.context_processors.admin_AIOA',
             ],
         },
     },

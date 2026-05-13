@@ -4,11 +4,16 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.http import require_POST
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
 
 from apps.courses.models import Enrollment, Lesson, LessonProgress, Course
 
 logger = logging.getLogger(__name__)
 
+@staff_member_required(login_url='/accounts/login/')
+def admin_dashboard(request):
+    return render(request, 'dashboard/admin_dashboard.html')
 
 @login_required
 def dashboard_home(request):

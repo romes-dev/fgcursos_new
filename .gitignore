@@ -39,6 +39,9 @@ Thumbs.db
 
 # Docker
 *.override.yml
+docker-compose.yml
+docker-compose.portainer.yml
+docker-compose.dev.yml
 
 # Coverage
 .coverage

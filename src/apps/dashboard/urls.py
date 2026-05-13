@@ -9,4 +9,5 @@ urlpatterns = [
     path('curso/<slug:course_slug>/aula/<int:lesson_pk>/', views.lesson_view, name='lesson'),
     path('aula/<int:lesson_pk>/completar/', views.mark_lesson_complete, name='complete_lesson'),
     path('certificado/<int:enrollment_id>/', views.download_certificate, name='certificate'),
+    path('admin-painel/', views.admin_dashboard, name='admin_dashboard'),
 ]

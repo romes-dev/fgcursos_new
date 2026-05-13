@@ -16,7 +16,8 @@ urlpatterns = [
     path('carrinho/', include('apps.cart.urls')),
     path('pedidos/', include('apps.orders.urls')),
     path('pagamentos/', include('apps.payments.urls')),
-    path('minha-area/', include('apps.dashboard.urls')),
+    path('minha-area/', include('apps.dashboard.urls', namespace='user_dashboard')),
+    path('admin-dashboard/', include('apps.dashboard.urls', namespace='admin_dashboard')),
 ]
 
 if settings.DEBUG:
